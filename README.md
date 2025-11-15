@@ -1,94 +1,99 @@
-# 10x Astro Starter
+# EduKids
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+![Version](https://img.shields.io/badge/version-0.0.1-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+
+## Table of Contents
+1. [Description](#description)  
+2. [Tech Stack](#tech-stack)  
+3. [Getting Started](#getting-started)  
+4. [Available Scripts](#available-scripts)  
+5. [Project Scope](#project-scope)  
+6. [Project Status](#project-status)  
+7. [License](#license)  
+
+## Description
+EduKids is a web platform for teachers and parents to generate themed, AI-supported question sets tailored by a child’s age and chosen topic. Users can:
+- Register and log in with email/password  
+- Generate up to 10 questions per session  
+- Accept, reject, or edit each proposed question  
+- Store accepted questions in a database with filtering by age and topic  
 
 ## Tech Stack
-
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
-
-## Prerequisites
-
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+- **Frontend:** Astro 5, React 19, TypeScript 5, Tailwind 4, Shadcn/ui  
+- **Backend & Database:** Supabase (PostgreSQL, SDK, authentication)  
+- **AI Integration:** Openrouter.ai (multi-model support, cost-control)  
+- **CI/CD & Hosting:** GitHub Actions, Docker on DigitalOcean  
 
 ## Getting Started
+### Prerequisites
+- Node.js v22.14.0 (use [nvm](https://github.com/nvm-sh/nvm) via `.nvmrc`)  
+- A Supabase project (URL & anon key)  
+- An Openrouter.ai API key  
 
-1. Clone the repository:
-
+### Setup
 ```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
+# Clone the repository
+git clone https://github.com/adnarc/edu-kids.git
+cd edu-kids
 
-2. Install dependencies:
+# Switch to Node version
+nvm use
 
-```bash
+# Install dependencies
 npm install
 ```
 
-3. Run the development server:
+### Configuration
+Create a `.env` file in the project root with the following variables:
+```env
+VITE_SUPABASE_URL=<your-supabase-url>
+VITE_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+OPENROUTER_API_KEY=<your-openrouter-api-key>
+```
 
+### Run Locally
 ```bash
 npm run dev
 ```
-
-4. Build for production:
-
-```bash
-npm run build
-```
+Open your browser at `http://localhost:3000`.
 
 ## Available Scripts
+- `npm run dev`  
+  Starts the development server with live reload.  
+- `npm run build`  
+  Builds the production-ready site to `dist/`.  
+- `npm run preview`  
+  Preview the production build locally.  
+- `npm run astro`  
+  Run the Astro CLI.  
+- `npm run lint`  
+  Run ESLint to analyze code for issues.  
+- `npm run lint:fix`  
+  Run ESLint and automatically fix problems.  
+- `npm run format`  
+  Format code with Prettier.  
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+## Project Scope
+### MVP Features
+- User registration, login, password change, and account deletion  
+- Generate question sets (max 10) by age & topic  
+- Accept, reject, and edit AI-generated questions  
+- Store and review accepted questions with filtering  
+- CRUD operations for topics  
+- Error handling for AI/API calls with retry  
 
-## Project Structure
+### Out of Scope
+- Task sharing between users  
+- Mobile applications  
+- Automated difficulty rating  
+- Advanced caching strategies  
+- Detailed analytics beyond accept/reject counts  
+- Privacy policy and GDPR compliance  
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
-
-## AI Development Support
-
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
-
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
-
-### Cursor IDE
-
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
-
-### GitHub Copilot
-
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
-
-### Windsurf
-
-The `.windsurfrules` file contains AI configuration for Windsurf.
-
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+## Project Status
+🚧 **In Development (MVP)**  
+Key user flows and core features are being implemented. Contributions and feedback are welcome!
 
 ## License
-
-MIT
+This project is licensed under the **MIT License**.  

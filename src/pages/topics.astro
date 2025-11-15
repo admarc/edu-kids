@@ -1,0 +1,14 @@
+---
+/**
+ * Topics Page
+ * Displays all user topics with CRUD functionality
+ */
+import Layout from "../layouts/Layout.astro";
+import { TopicsView } from "../components/TopicsView";
+---
+
+<Layout title="Moje tematy | EduKids">
+  <main class="container mx-auto px-4 py-8">
+    <TopicsView client:load />
+  </main>
+</Layout>

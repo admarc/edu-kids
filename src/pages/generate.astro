@@ -1,0 +1,17 @@
+---
+/**
+ * Generate Questions Page
+ *
+ * Allows users to generate AI questions for a specific topic and age group
+ */
+import Layout from "../layouts/Layout.astro";
+import { GenerateQuestionsView } from "../components/GenerateQuestionsView";
+
+export const prerender = false;
+---
+
+<Layout title="Generuj pytania | EduKids">
+  <div class="container mx-auto py-8 px-4">
+    <GenerateQuestionsView client:load />
+  </div>
+</Layout>
