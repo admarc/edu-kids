@@ -1,0 +1,18 @@
+---
+/**
+ * Register Page
+ *
+ * Public page for user registration
+ * Redirects to /topics if user is already logged in
+ */
+
+import Layout from "../layouts/Layout.astro";
+import { AuthFormContainer } from "../components/auth/AuthFormContainer";
+import { RegisterForm } from "../components/auth/RegisterForm";
+---
+
+<Layout title="Rejestracja - EduKids" requireAuth={false}>
+  <AuthFormContainer client:load title="Rejestracja" description="Utwórz nowe konto">
+    <RegisterForm client:load />
+  </AuthFormContainer>
+</Layout>

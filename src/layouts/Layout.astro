@@ -1,16 +1,36 @@
 ---
 import "../styles/global.css";
 import { ToasterProvider } from "../components/ToasterProvider";
+import { Navigation } from "../components/Navigation";
 
 interface Props {
   title?: string;
+  requireAuth?: boolean;
 }
 
-const { title = "10x Astro Starter" } = Astro.props;
+const { title = "EduKids", requireAuth = true } = Astro.props;
+
+// Get user from session (set by middleware)
+const user = Astro.locals.user;
+
+// Handle authentication requirements
+if (requireAuth && !user) {
+  // User must be logged in but isn't - middleware should have redirected
+  // This is a fallback check
+  return Astro.redirect("/login");
+}
+
+// Prepare user data for Navigation component
+const userData = user
+  ? {
+      id: user.id,
+      email: user.email || "",
+    }
+  : null;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="pl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
@@ -19,6 +39,9 @@ const { title = "10x Astro Starter" } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
+    <!-- Navigation displayed only for authenticated users -->
+    {userData && <Navigation client:load user={userData} />}
+
     <slot />
     <ToasterProvider client:load />
   </body>

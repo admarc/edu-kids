@@ -374,3 +374,120 @@ export const AGE_GROUPS: AgeGroup[] = [
   { value: 9, label: "9-10 lat" },
   { value: 11, label: "11-12 lat" },
 ] as const;
+
+// ============================================================================
+// OpenRouter Service Types
+// ============================================================================
+
+/**
+ * Chat message for OpenRouter API
+ */
+export interface ChatMessage {
+  role: "system" | "user";
+  content: string;
+}
+
+/**
+ * Response format specification for structured JSON responses
+ */
+export interface ResponseFormat {
+  type: "json_schema";
+  json_schema: {
+    name: string;
+    strict: boolean;
+    schema: Record<string, unknown>;
+  };
+}
+
+/**
+ * OpenRouter service configuration options
+ */
+export interface OpenRouterServiceOptions {
+  apiUrl?: string;
+  defaultModel?: string;
+  defaultParams?: Record<string, number | string | boolean>;
+}
+
+/**
+ * OpenRouter API error response
+ */
+export interface OpenRouterError {
+  error: {
+    code: string;
+    message: string;
+  };
+}
+
+/**
+ * OpenRouter chat completion request payload
+ */
+export interface OpenRouterChatRequest {
+  model: string;
+  messages: ChatMessage[];
+  response_format?: ResponseFormat;
+  temperature?: number;
+  max_tokens?: number;
+  [key: string]: unknown;
+}
+
+/**
+ * OpenRouter chat completion response
+ */
+export interface OpenRouterChatResponse {
+  id: string;
+  model: string;
+  choices: {
+    index: number;
+    message: {
+      role: string;
+      content: string;
+    };
+    finish_reason: string;
+  }[];
+  usage?: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
+}
+
+// ============================================================================
+// Auth DTOs
+// ============================================================================
+
+/**
+ * User data returned from auth endpoints
+ */
+export interface UserDto {
+  id: string;
+  email: string;
+  email_confirmed_at?: string;
+  created_at: string;
+}
+
+/**
+ * Auth response for login
+ */
+export interface AuthResponseDto {
+  message: string;
+  user: UserDto;
+}
+
+/**
+ * Generic auth success response
+ */
+export interface AuthSuccessDto {
+  message: string;
+}
+
+/**
+ * Auth error response
+ */
+export interface AuthErrorDto {
+  error: string;
+  message: string;
+  details?: {
+    field: string;
+    message: string;
+  }[];
+}

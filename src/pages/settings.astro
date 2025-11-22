@@ -1,0 +1,116 @@
+---
+/**
+ * Settings Page
+ *
+ * Protected page for account management
+ * Allows users to change password and delete account
+ */
+
+import Layout from "../layouts/Layout.astro";
+import { ChangePasswordForm } from "../components/auth/ChangePasswordForm";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
+
+// TODO: Get user from locals when auth is implemented
+// const user = Astro.locals.user;
+// if (!user) return Astro.redirect('/login');
+const mockUser = { email: "user@example.com" };
+---
+
+<Layout title="Ustawienia konta - EduKids">
+  <div class="min-h-screen bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 py-12">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Ustawienia konta</h1>
+        <p class="text-gray-600 mt-2">Zarządzaj swoim kontem i bezpieczeństwem</p>
+      </div>
+
+      <div class="space-y-6">
+        <!-- Account Information -->
+        <Card>
+          <CardHeader>
+            <CardTitle>Informacje o koncie</CardTitle>
+            <CardDescription>Twoje dane użytkownika</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center py-2">
+                <span class="text-sm font-medium text-gray-700">Email</span>
+                <span class="text-sm text-gray-900">{mockUser.email}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <!-- Change Password -->
+        <Card>
+          <CardHeader>
+            <CardTitle>Zmiana hasła</CardTitle>
+            <CardDescription> Zaktualizuj hasło aby zachować bezpieczeństwo konta </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChangePasswordForm client:load />
+          </CardContent>
+        </Card>
+
+        <!-- Delete Account -->
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-red-600">Strefa niebezpieczna</CardTitle>
+            <CardDescription> Nieodwracalne działania dotyczące Twojego konta </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div class="space-y-4">
+              <div>
+                <h3 class="text-sm font-medium text-gray-900 mb-2">Usuń konto</h3>
+                <p class="text-sm text-gray-600 mb-4">
+                  Po usunięciu konta wszystkie Twoje dane zostaną trwale usunięte. Tej operacji nie można cofnąć.
+                </p>
+                <button
+                  id="deleteAccountButton"
+                  class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-red-600 text-white hover:bg-red-700 h-10 py-2 px-4"
+                >
+                  Usuń konto
+                </button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Account Dialog (initialized in script) -->
+  <div id="deleteAccountDialogRoot"></div>
+
+  <script>
+    import { createRoot } from "react-dom/client";
+    import { createElement } from "react";
+    import { DeleteAccountDialog } from "../components/auth/DeleteAccountDialog";
+
+    const button = document.getElementById("deleteAccountButton");
+    const root = createRoot(document.getElementById("deleteAccountDialogRoot")!);
+
+    let isOpen = false;
+
+    const render = () => {
+      root.render(
+        createElement(DeleteAccountDialog, {
+          isOpen,
+          onClose: () => {
+            isOpen = false;
+            render();
+          },
+          userEmail: "user@example.com", // TODO: Get from user object
+        })
+      );
+    };
+
+    button?.addEventListener("click", () => {
+      isOpen = true;
+      render();
+    });
+
+    // Initial render
+    render();
+  </script>
+</Layout>

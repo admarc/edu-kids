@@ -1,0 +1,18 @@
+---
+/**
+ * Login Page
+ *
+ * Public page for user authentication
+ * Redirects to /topics if user is already logged in
+ */
+
+import Layout from "../layouts/Layout.astro";
+import { AuthFormContainer } from "../components/auth/AuthFormContainer";
+import { LoginForm } from "../components/auth/LoginForm";
+---
+
+<Layout title="Logowanie - EduKids" requireAuth={false}>
+  <AuthFormContainer client:load title="Logowanie" description="Zaloguj się do swojego konta">
+    <LoginForm client:load />
+  </AuthFormContainer>
+</Layout>

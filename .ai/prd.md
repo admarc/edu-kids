@@ -64,6 +64,7 @@ Poza zakresem MVP:
   - Formularz z polami: wiek, temat, liczba pytań.
   - Po kliknięciu "Generuj" wyświetlany jest zestaw pytań.
   - Obsługa błędów (np. liczba >10).
+  - Funkcjonalność nie jest dostępna bez logowania się do systemu (US-013).
 
 - ID: US-006
   Tytuł: Akceptacja pytań
@@ -71,6 +72,7 @@ Poza zakresem MVP:
   Kryteria akceptacji:
   - Przycisk "Zatwierdź" przy każdym pytaniu.
   - Pytanie przenoszone do listy zaakceptowanych.
+  - Funkcjonalność nie jest dostępna bez logowania się do systemu (US-013).
 
 - ID: US-007
   Tytuł: Odrzucenie pytań
@@ -78,6 +80,7 @@ Poza zakresem MVP:
   Kryteria akceptacji:
   - Przycisk "Odrzuć" przy każdym pytaniu.
   - Pytanie usuwane z listy propozycji.
+  - Funkcjonalność nie jest dostępna bez logowania się do systemu (US-013).
 
 - ID: US-008
   Tytuł: CRUD tematów
@@ -85,6 +88,7 @@ Poza zakresem MVP:
   Kryteria akceptacji:
   - Interfejs do dodawania nowego tematu.
   - Możliwość edycji i usuwania istniejących.
+  - Funkcjonalność nie jest dostępna bez logowania się do systemu (US-013).
 
 - ID: US-009
   Tytuł: Przegląd zaakceptowanych pytań
@@ -92,6 +96,7 @@ Poza zakresem MVP:
   Kryteria akceptacji:
   - Lista zaakceptowanych pytań.
   - Filtrowanie po wieku i temacie.
+  - Funkcjonalność nie jest dostępna bez logowania się do systemu (US-013).
 
 - ID: US-010
   Tytuł: Edycja zaakceptowanych pytań
@@ -99,6 +104,7 @@ Poza zakresem MVP:
   Kryteria akceptacji:
   - Przycisk "Edytuj" przy każdym pytaniu.
   - Możliwość zapisu zmian.
+  - Funkcjonalność nie jest dostępna bez logowania się do systemu (US-013).
 
 - ID: US-011
   Tytuł: Usuwanie zaakceptowanych pytań
@@ -106,6 +112,7 @@ Poza zakresem MVP:
   Kryteria akceptacji:
   - Przycisk "Usuń" przy pytaniu.
   - Pytanie usuwane z bazy.
+  - Funkcjonalność nie jest dostępna bez logowania się do systemu (US-013).
 
 - ID: US-012
   Tytuł: Generowanie zestawu zapisanych zadań
@@ -113,6 +120,21 @@ Poza zakresem MVP:
   Kryteria akceptacji:
   - Wybór grupy wiekowej.
   - Generowanie zestawu z zaakceptowanych pytań.
+  - Funkcjonalność nie jest dostępna bez logowania się do systemu (US-013).
+
+- ID: US-013 Bezpieczny dostęp i uwierzytelnianie
+  Tytuł: Bezpieczny dostęp
+  Opis: Jako użytkownik chcę mieć możliwość rejestracji i logowania się do systemu w sposób zapewniający bezpieczeństwo moich danych.
+  Kryteria akceptacji:
+    Logowanie i rejestracja odbywają się na dedykowanych stronach.
+    Logowanie wymaga podania adresu email i hasła.
+    Rejestracja wymaga podania adresu email, hasła i potwierdzenia hasła.
+    Użytkownik NIE MOŻE korzystać z aplikacji bez logowania sie do systemu.
+    Użytkownik może logować się do systemu poprzez przycisk w prawym górnym rogu.
+    Użytkownik może się wylogować z systemu poprzez przycisk w prawym górnym rogu w głównym @Layout.astro.
+    Nie korzystamy z zewnętrznych serwisów logowania (np. Google, GitHub).
+    Odzyskiwanie hasła powinno być możliwe.
+
 
 ## 6. Metryki sukcesu
 - 50% wygenerowanych pytań zaakceptowanych przez użytkowników.
