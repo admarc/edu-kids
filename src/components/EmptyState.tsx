@@ -22,7 +22,7 @@ export function EmptyState({ onAddClick }: EmptyStateProps) {
         Tematy pomagają organizować pytania. Utwórz pierwszy temat, aby rozpocząć.
       </p>
       <Button onClick={onAddClick} size="lg">
-        Utwórz pierwszy temat
+        dodaj temat
       </Button>
     </div>
   );

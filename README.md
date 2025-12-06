@@ -23,6 +23,7 @@ EduKids is a web platform for teachers and parents to generate themed, AI-suppor
 - **Frontend:** Astro 5, React 19, TypeScript 5, Tailwind 4, Shadcn/ui  
 - **Backend & Database:** Supabase (PostgreSQL, SDK, authentication)  
 - **AI Integration:** Openrouter.ai (multi-model support, cost-control)  
+- **Testing:** Vitest (unit & integration tests), Playwright (E2E tests)  
 - **CI/CD & Hosting:** GitHub Actions, Docker on DigitalOcean  
 
 ## Getting Started
@@ -67,6 +68,12 @@ Open your browser at `http://localhost:3000`.
   Preview the production build locally.  
 - `npm run astro`  
   Run the Astro CLI.  
+- `npm run test`  
+  Run unit and integration tests with Vitest.  
+- `npm run test:ui`  
+  Run tests with Vitest UI.  
+- `npm run test:e2e`  
+  Run end-to-end tests with Playwright.  
 - `npm run lint`  
   Run ESLint to analyze code for issues.  
 - `npm run lint:fix`  

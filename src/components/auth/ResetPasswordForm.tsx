@@ -91,29 +91,24 @@ export function ResetPasswordForm({ token }: ResetPasswordFormProps) {
     setIsSubmitting(true);
 
     try {
-      // TODO: Call API endpoint POST /api/auth/reset-password
-      // const response = await fetch('/api/auth/reset-password', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ token, password: data.password }),
-      // });
-      //
-      // if (!response.ok) {
-      //   const error = await response.json();
-      //   if (response.status === 400) {
-      //     setErrors({ form: 'Link resetowania hasła jest nieprawidłowy lub wygasł' });
-      //     setTokenValid(false);
-      //   } else {
-      //     setErrors({ form: error.message });
-      //   }
-      //   return;
-      // }
-      //
-      // setSuccess(true);
+      const response = await fetch("/api/auth/reset-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, password: data.password }),
+      });
 
-      console.log("Reset password form submitted:", { token, password: data.password });
+      if (!response.ok) {
+        const error = await response.json();
+        if (response.status === 400) {
+          setErrors({ form: "Link resetowania hasła jest nieprawidłowy lub wygasł" });
+          setTokenValid(false);
+        } else {
+          setErrors({ form: error.message || "Wystąpił błąd podczas resetowania hasła" });
+        }
+        return;
+      }
+
       setSuccess(true);
-      // Temporary placeholder - will be implemented with backend
     } catch {
       setErrors({
         form: "Problem z połączeniem. Sprawdź internet i spróbuj ponownie",

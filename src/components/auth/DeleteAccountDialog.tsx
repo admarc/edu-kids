@@ -51,28 +51,24 @@ export function DeleteAccountDialog({ isOpen, onClose, userEmail }: DeleteAccoun
     setIsDeleting(true);
 
     try {
-      // TODO: Call API endpoint DELETE /api/auth/account
-      // const response = await fetch('/api/auth/account', {
-      //   method: 'DELETE',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ password }),
-      // });
-      //
-      // if (!response.ok) {
-      //   const error = await response.json();
-      //   if (response.status === 401) {
-      //     setErrors({ password: 'Hasło jest nieprawidłowe' });
-      //   } else {
-      //     setErrors({ form: error.message });
-      //   }
-      //   return;
-      // }
-      //
-      // // Success - redirect to home page
-      // window.location.href = '/';
+      const response = await fetch("/api/auth/account", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
 
-      console.log("Delete account confirmed with password:", password);
-      // Temporary placeholder - will be implemented with backend
+      if (!response.ok) {
+        const error = await response.json();
+        if (response.status === 401) {
+          setErrors({ password: "Hasło jest nieprawidłowe" });
+        } else {
+          setErrors({ form: error.message });
+        }
+        return;
+      }
+
+      // Success - redirect to home page
+      window.location.href = "/";
     } catch {
       setErrors({
         form: "Problem z połączeniem. Sprawdź internet i spróbuj ponownie",

@@ -55,24 +55,19 @@ export function ForgotPasswordForm() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Call API endpoint POST /api/auth/forgot-password
-      // const response = await fetch('/api/auth/forgot-password', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data),
-      // });
-      //
-      // if (!response.ok) {
-      //   const error = await response.json();
-      //   setErrors({ form: error.message });
-      //   return;
-      // }
-      //
-      // setSuccess(true);
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      console.log("Forgot password form submitted:", data);
+      if (!response.ok) {
+        const error = await response.json();
+        setErrors({ form: error.message });
+        return;
+      }
+
       setSuccess(true);
-      // Temporary placeholder - will be implemented with backend
     } catch {
       setErrors({
         form: "Problem z połączeniem. Sprawdź internet i spróbuj ponownie",

@@ -81,34 +81,28 @@ export function ChangePasswordForm() {
     setIsSubmitting(true);
 
     try {
-      // TODO: Call API endpoint POST /api/auth/change-password
-      // const response = await fetch('/api/auth/change-password', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     currentPassword: data.currentPassword,
-      //     newPassword: data.newPassword,
-      //   }),
-      // });
-      //
-      // if (!response.ok) {
-      //   const error = await response.json();
-      //   if (response.status === 401) {
-      //     setErrors({ currentPassword: 'Aktualne hasło jest nieprawidłowe' });
-      //   } else {
-      //     setErrors({ form: error.message });
-      //   }
-      //   return;
-      // }
-      //
-      // setSuccess(true);
-      // // Reset form
-      // setData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      const response = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword: data.currentPassword,
+          newPassword: data.newPassword,
+        }),
+      });
 
-      console.log("Change password form submitted");
+      if (!response.ok) {
+        const error = await response.json();
+        if (response.status === 401) {
+          setErrors({ currentPassword: "Aktualne hasło jest nieprawidłowe" });
+        } else {
+          setErrors({ form: error.message });
+        }
+        return;
+      }
+
       setSuccess(true);
+      // Reset form
       setData({ currentPassword: "", newPassword: "", confirmPassword: "" });
-      // Temporary placeholder - will be implemented with backend
     } catch {
       setErrors({
         form: "Problem z połączeniem. Sprawdź internet i spróbuj ponownie",

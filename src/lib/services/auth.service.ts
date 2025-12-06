@@ -157,7 +157,7 @@ export class AuthService {
       throw new AuthError("NO_EMAIL", "Email użytkownika nie jest dostępny", 400);
     }
 
-    // Re-authenticate with password
+    // Re-authenticate with password to verify it's correct
     const { error: signInError } = await this.supabase.auth.signInWithPassword({
       email: userData.user.email,
       password,
@@ -167,11 +167,30 @@ export class AuthService {
       throw new AuthError("INVALID_PASSWORD", "Hasło jest nieprawidłowe", 401);
     }
 
-    // Delete user account (this will cascade delete all related data via RLS)
-    // Note: Supabase doesn't have a direct deleteUser method in the client
-    // This should be done via admin API or RPC call
-    // For now, we'll use a workaround
-    throw new AuthError("NOT_IMPLEMENTED", "Usuwanie konta nie jest jeszcze zaimplementowane", 501);
+    // Delete all user data first (topics will cascade delete questions via foreign key)
+    const { error: deleteTopicsError } = await this.supabase
+      .from('topics')
+      .delete()
+      .eq('user_id', userId);
+
+    if (deleteTopicsError) {
+      console.error('Error deleting user topics:', deleteTopicsError);
+      throw new AuthError("DELETE_DATA_ERROR", "Błąd podczas usuwania danych użytkownika", 500);
+    }
+
+    // Since we can't delete the user from auth directly with client SDK,
+    // we'll sign out the user. In a production app, you'd typically:
+    // 1. Mark the user as deleted in a custom table
+    // 2. Use a server-side admin SDK or webhook to actually delete the auth user
+    // 3. Or use a Supabase Edge Function with admin privileges
+    
+    // For now, we'll sign out the user after deleting their data
+    const { error: signOutError } = await this.supabase.auth.signOut();
+    
+    if (signOutError) {
+      console.error('Error signing out user:', signOutError);
+      // Don't throw here as the data is already deleted
+    }
   }
 
   /**

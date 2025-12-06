@@ -8,7 +8,6 @@
 import type { APIRoute } from "astro";
 import { TopicsService } from "../../../lib/services/topics.service";
 import { updateTopicSchema } from "../../../lib/validators/topics.validators";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import { z } from "zod";
 
 export const prerender = false;
@@ -26,6 +25,19 @@ export const prerender = false;
  */
 export const PUT: APIRoute = async ({ params, request, locals }) => {
   try {
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: "Unauthorized",
+          message: "Authentication required",
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
     // 1. Parse and validate topic ID
     const topicId = parseInt(params.id || "", 10);
     if (isNaN(topicId)) {
@@ -61,7 +73,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     const validatedData = updateTopicSchema.parse(body);
 
     // 3. Get user from locals (auth)
-    const userId = DEFAULT_USER_ID;
+    const userId = locals.user.id;
 
     // 4. Create service instance and update topic
     const topicsService = new TopicsService(locals.supabase);
@@ -131,6 +143,19 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
  */
 export const DELETE: APIRoute = async ({ params, locals }) => {
   try {
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: "Unauthorized",
+          message: "Authentication required",
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
     // 1. Parse and validate topic ID
     const topicId = parseInt(params.id || "", 10);
     if (isNaN(topicId)) {
@@ -147,7 +172,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     }
 
     // 2. Get user from locals (auth)
-    const userId = DEFAULT_USER_ID;
+    const userId = locals.user.id;
 
     // 3. Create service instance and delete topic
     const topicsService = new TopicsService(locals.supabase);

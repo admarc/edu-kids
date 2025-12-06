@@ -8,7 +8,6 @@
 import type { APIRoute } from "astro";
 import { TopicsService } from "../../../lib/services/topics.service";
 import { createTopicSchema } from "../../../lib/validators/topics.validators";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import { z } from "zod";
 
 export const prerender = false;
@@ -23,9 +22,21 @@ export const prerender = false;
  */
 export const GET: APIRoute = async ({ locals }) => {
   try {
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: "Unauthorized",
+          message: "Authentication required",
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
     // 1. Get user from locals (auth)
-    // For now, using DEFAULT_USER_ID until auth is implemented
-    const userId = DEFAULT_USER_ID;
+    const userId = locals.user.id;
 
     // 2. Create service instance and fetch topics
     const topicsService = new TopicsService(locals.supabase);
@@ -69,6 +80,18 @@ export const GET: APIRoute = async ({ locals }) => {
  */
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: "Unauthorized",
+          message: "Authentication required",
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
     // 1. Parse and validate request body
     let body;
     try {
@@ -88,8 +111,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const validatedData = createTopicSchema.parse(body);
 
-    // 2. Get user from locals (auth)
-    const userId = DEFAULT_USER_ID;
+    const userId = locals.user.id;
 
     // 3. Create service instance and call method
     const topicsService = new TopicsService(locals.supabase);
