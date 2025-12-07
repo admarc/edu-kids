@@ -57,9 +57,6 @@ export class QuestionsService {
    * @throws Error if generation or database operation fails
    */
   async generateQuestions(userId: string, data: GenerateQuestionsInput): Promise<GeneratedQuestionDto[]> {
-    // eslint-disable-next-line no-console
-    console.log("Generating questions:", { userId, data });
-
     // Step 1: Verify topic ownership and get topic name
     const topicName = await this.verifyTopicOwnership(data.topic_id, userId);
 
@@ -90,9 +87,6 @@ export class QuestionsService {
       throw new Error("No questions were returned after creation");
     }
 
-    // eslint-disable-next-line no-console
-    console.log("Questions generated successfully:", insertedQuestions.length);
-
     // Return as GeneratedQuestionDto[]
     return insertedQuestions.map((q) => ({
       id: q.id,
@@ -111,9 +105,6 @@ export class QuestionsService {
    * @private
    */
   private async callAIService(data: GenerateQuestionsInput, topicName: string): Promise<string[]> {
-    // eslint-disable-next-line no-console
-    console.log("Calling OpenRouter AI service with:", { data, topicName });
-
     // Prepare chat messages
     const messages: ChatMessage[] = [
       {
@@ -164,9 +155,6 @@ export class QuestionsService {
       if (validQuestions.length === 0) {
         throw new Error("AI service returned no valid question strings");
       }
-
-      // eslint-disable-next-line no-console
-      console.log("AI service successfully returned:", validQuestions.length, "questions");
 
       return validQuestions;
     } catch (error) {

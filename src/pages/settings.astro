@@ -80,39 +80,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
   <!-- Hidden data for client-side script -->
   <div data-user-email={Astro.locals.user?.email} style="display: none;"></div>
 
+  <!-- prettier-ignore -->
   <script>
-    import { createRoot } from "react-dom/client";
-    import { createElement } from "react";
-    import { DeleteAccountDialog } from "../components/auth/DeleteAccountDialog";
-
-    const button = document.getElementById("deleteAccountButton");
-    const dialogRoot = document.getElementById("deleteAccountDialogRoot");
-    if (dialogRoot) {
-      const root = createRoot(dialogRoot);
-
-      let isOpen = false;
-
-      const render = () => {
-        root.render(
-          createElement(DeleteAccountDialog, {
-            isOpen,
-            onClose: () => {
-              isOpen = false;
-              render();
-            },
-            userEmail:
-              document.querySelector("[data-user-email]")?.getAttribute("data-user-email") || "user@example.com",
-          })
-        );
-      };
-
-      button?.addEventListener("click", () => {
-        isOpen = true;
-        render();
-      });
-
-      // Initial render
-      render();
-    }
+    import { initializeDeleteAccountDialog } from "../lib/client/deleteAccountDialog";
+    initializeDeleteAccountDialog();
   </script>
 </Layout>

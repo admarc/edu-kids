@@ -62,7 +62,7 @@ test.describe("Create Topic (Authenticated)", () => {
     await expect(topicsPage.dialogSubmitButton).toBeDisabled();
   });
 
-  test("should handle rapid consecutive topic creation", async ({ authenticatedPage }) => {
+  test("should handle rapid consecutive topic creation", async () => {
     await topicsPage.navigate();
 
     const topics = [`Język Polski ${Date.now()}`, `Informatyka ${Date.now() + 1}`, `Muzyka ${Date.now() + 2}`];

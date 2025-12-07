@@ -8,7 +8,7 @@
 
 import type { APIRoute } from "astro";
 import { forgotPasswordSchema } from "../../../lib/validators/auth.validators";
-import { AuthService, AuthError } from "../../../lib/services/auth.service";
+import { AuthService } from "../../../lib/services/auth.service";
 import type { AuthSuccessDto, AuthErrorDto } from "../../../types";
 
 export const prerender = false;
@@ -47,10 +47,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
     try {
       // Attempt to send password reset email
       await authService.sendPasswordResetEmail(email);
-    } catch (error) {
+    } catch {
       // For security reasons, we don't reveal if the email exists or not
       // We log the error but still return success to the user
-      console.error("Password reset email error:", error);
     }
 
     // Always return success for security (don't reveal if email exists)
@@ -62,7 +61,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
-  } catch (error) {
+  } catch {
     // Handle unexpected errors
     const errorResponse: AuthErrorDto = {
       error: "Internal server error",

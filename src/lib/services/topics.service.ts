@@ -76,9 +76,6 @@ export class TopicsService {
    * @throws Error if creation fails or topic is not returned
    */
   async createTopic(userId: string, data: CreateTopicInput): Promise<TopicDto> {
-    // eslint-disable-next-line no-console
-    console.log("Creating topic:", { userId, data });
-
     const { data: topic, error } = await this.supabase
       .from("topics")
       .insert({
@@ -98,8 +95,6 @@ export class TopicsService {
       throw new Error("Topic was not returned after creation");
     }
 
-    // eslint-disable-next-line no-console
-    console.log("Topic created successfully:", topic);
     return topic;
   }
 

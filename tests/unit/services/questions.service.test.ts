@@ -3,7 +3,6 @@ import { QuestionsService } from "@/lib/services/questions.service";
 import { OpenRouterService } from "@/lib/services/openrouter.service";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/db/database.types";
-import type { GeneratedQuestionDto } from "@/types";
 import type { GenerateQuestionsInput } from "@/lib/validators/questions.validators";
 
 // Mock OpenRouter Service
@@ -196,11 +195,7 @@ describe("QuestionsService", () => {
 
       // Mock AI service response
       mockSendChat.mockResolvedValue({
-        questions: [
-          "Co to jest dodawanie?",
-          "Ile to 2 + 2?",
-          "Jakie znasz liczby parzyste?",
-        ],
+        questions: ["Co to jest dodawanie?", "Ile to 2 + 2?", "Jakie znasz liczby parzyste?"],
       });
 
       // Mock database insert - select() after insert() is terminal
@@ -328,7 +323,9 @@ describe("QuestionsService", () => {
           error: dbError,
         });
 
-      await expect(service.generateQuestions(userId, generateData)).rejects.toThrow("Failed to save generated questions");
+      await expect(service.generateQuestions(userId, generateData)).rejects.toThrow(
+        "Failed to save generated questions"
+      );
     });
 
     it("should throw error when no questions are returned after insert", async () => {
@@ -934,4 +931,3 @@ describe("QuestionsService", () => {
     });
   });
 });
-

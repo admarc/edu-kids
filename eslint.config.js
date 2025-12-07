@@ -36,6 +36,7 @@ const jsxA11yConfig = tseslint.config({
 
 const reactConfig = tseslint.config({
   files: ["**/*.{js,jsx,ts,tsx}"],
+  ignores: ["tests/e2e/**/*"], // Exclude e2e tests from React rules
   extends: [pluginReact.configs.flat.recommended],
   languageOptions: {
     ...pluginReact.configs.flat.recommended.languageOptions,
@@ -62,5 +63,8 @@ export default tseslint.config(
   jsxA11yConfig,
   reactConfig,
   eslintPluginAstro.configs["flat/recommended"],
-  eslintPluginPrettier
+  {
+    files: ["**/*.{js,jsx,ts,tsx}"],
+    ...eslintPluginPrettier,
+  }
 );
