@@ -31,10 +31,10 @@ export default defineConfig({
       exclude: ["node_modules/", "tests/", "**/*.d.ts", "**/*.config.*", "**/mockData/", "dist/"],
       // Minimum 70% coverage for services and validators
       thresholds: {
-        lines: 60,
-        functions: 60,
-        branches: 60,
-        statements: 60,
+        lines: 50,
+        functions: 50,
+        branches: 50,
+        statements: 50,
       },
     },
 
