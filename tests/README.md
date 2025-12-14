@@ -307,4 +307,3 @@ test('my test', async ({ authenticatedPage }) => {
 - [Vitest Documentation](https://vitest.dev/)
 - [Playwright Documentation](https://playwright.dev/)
 - [Testing Library](https://testing-library.com/)
-

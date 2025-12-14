@@ -8,14 +8,13 @@ interface AuthFixtures {
 
 // Test user credentials from environment variables
 export const TEST_USER = {
-  email: process.env.E2E_USERNAME,
-  password: process.env.E2E_PASSWORD,
+  email: process.env.E2E_USERNAME || "test@example.com",
+  password: process.env.E2E_PASSWORD || "test123456",
 };
 
 // Validate that required environment variables are set
 if (!process.env.E2E_USERNAME || !process.env.E2E_PASSWORD) {
-  console.warn("⚠️  E2E_USERNAME or E2E_PASSWORD not found in environment variables. Using fallback credentials.");
-  console.warn("   Please set E2E_USERNAME and E2E_PASSWORD in .env.test file.");
+  throw new Error("E2E_USERNAME or E2E_PASSWORD not found in environment variables");
 }
 
 export const test = base.extend<AuthFixtures>({

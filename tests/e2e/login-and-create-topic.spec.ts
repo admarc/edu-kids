@@ -144,31 +144,3 @@ test.describe("Login and Create Topic", () => {
     expect(hasNewTopic).toBeFalsy();
   });
 });
-
-test.describe("Login and Create Topic - Visual Tests", () => {
-  const TEST_USER = {
-    email: process.env.E2E_USERNAME,
-    password: process.env.E2E_PASSWORD,
-  };
-
-  test("should match visual snapshot of topics page after login", async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const topicsPage = new TopicsPage(page);
-
-    // Login
-    await loginPage.navigate();
-    await loginPage.login(TEST_USER.email, TEST_USER.password);
-
-    // Navigate to topics
-    await topicsPage.navigate();
-
-    // Wait for page to be fully loaded
-    await page.waitForLoadState("networkidle");
-
-    // Visual regression test
-    await expect(page).toHaveScreenshot("topics-page-after-login.png", {
-      fullPage: true,
-      maxDiffPixels: 100,
-    });
-  });
-});

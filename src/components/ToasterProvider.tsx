@@ -10,4 +10,3 @@ import { Toaster } from "./ui/sonner";
 export function ToasterProvider() {
   return <Toaster richColors position="top-right" />;
 }
-

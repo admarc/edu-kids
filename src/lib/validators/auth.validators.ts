@@ -1,6 +1,6 @@
 /**
  * Auth Validators
- * 
+ *
  * Zod schemas for authentication-related API endpoints.
  * These schemas validate user input for login, registration, password changes, etc.
  */
@@ -10,7 +10,8 @@ import { z } from "zod";
 // Common validation rules
 const emailRule = z.string().email("Nieprawidłowy format email");
 
-const passwordRule = z.string()
+const passwordRule = z
+  .string()
   .min(8, "Hasło musi mieć co najmniej 8 znaków")
   .regex(/[A-Z]/, "Hasło musi zawierać wielką literę")
   .regex(/[a-z]/, "Hasło musi zawierać małą literę")
@@ -81,4 +82,3 @@ export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type DeleteAccountInput = z.infer<typeof deleteAccountSchema>;
-

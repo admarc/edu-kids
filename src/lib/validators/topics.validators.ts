@@ -14,13 +14,13 @@ import { ValidationRules } from "../../types";
 export const createTopicSchema = z.object({
   name: z
     .string()
+    .trim()
     .min(ValidationRules.topic.nameMinLength, {
       message: "Nazwa tematu musi mieć co najmniej 1 znak",
     })
     .max(ValidationRules.topic.nameMaxLength, {
       message: "Nazwa tematu może mieć maksymalnie 100 znaków",
-    })
-    .trim(),
+    }),
 });
 
 /**
@@ -36,13 +36,13 @@ export type CreateTopicInput = z.infer<typeof createTopicSchema>;
 export const updateTopicSchema = z.object({
   name: z
     .string()
+    .trim()
     .min(ValidationRules.topic.nameMinLength, {
       message: "Nazwa tematu musi mieć co najmniej 1 znak",
     })
     .max(ValidationRules.topic.nameMaxLength, {
       message: "Nazwa tematu może mieć maksymalnie 100 znaków",
-    })
-    .trim(),
+    }),
 });
 
 /**

@@ -168,13 +168,9 @@ export class AuthService {
     }
 
     // Delete all user data first (topics will cascade delete questions via foreign key)
-    const { error: deleteTopicsError } = await this.supabase
-      .from('topics')
-      .delete()
-      .eq('user_id', userId);
+    const { error: deleteTopicsError } = await this.supabase.from("topics").delete().eq("user_id", userId);
 
     if (deleteTopicsError) {
-      console.error('Error deleting user topics:', deleteTopicsError);
       throw new AuthError("DELETE_DATA_ERROR", "Błąd podczas usuwania danych użytkownika", 500);
     }
 
@@ -183,12 +179,11 @@ export class AuthService {
     // 1. Mark the user as deleted in a custom table
     // 2. Use a server-side admin SDK or webhook to actually delete the auth user
     // 3. Or use a Supabase Edge Function with admin privileges
-    
+
     // For now, we'll sign out the user after deleting their data
     const { error: signOutError } = await this.supabase.auth.signOut();
-    
+
     if (signOutError) {
-      console.error('Error signing out user:', signOutError);
       // Don't throw here as the data is already deleted
     }
   }
