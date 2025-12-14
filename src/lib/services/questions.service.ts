@@ -6,8 +6,8 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../../db/database.types";
-import type { GeneratedQuestionDto, ChatMessage, ResponseFormat } from "../../types";
-import type { GenerateQuestionsInput } from "../validators/questions.validators";
+import type { GeneratedQuestionDto, ChatMessage, ResponseFormat, QuestionDto, QuestionStatus } from "../../types";
+import type { GenerateQuestionsInput, UpdateQuestionInput } from "../validators/questions.validators";
 import { OpenRouterService } from "./openrouter.service";
 
 /**
@@ -96,6 +96,114 @@ export class QuestionsService {
   }
 
   /**
+   * Gets a paginated list of questions for a user with optional filtering
+   *
+   * @param userId - The ID of the authenticated user
+   * @param filters - Optional filters for status, age_group, topic_id
+   * @param pagination - Pagination parameters
+   * @returns Promise resolving to paginated questions list
+   */
+  async getQuestions(
+    userId: string,
+    filters: { status?: QuestionStatus[]; age_group?: number; topic_id?: number } = {},
+    pagination: { page: number; limit: number } = { page: 1, limit: 10 }
+  ): Promise<{ data: QuestionDto[]; pagination: { page: number; limit: number; total: number } }> {
+    let query = this.supabase
+      .from("questions")
+      .select("*, topics(name)", { count: "exact" })
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    // Apply filters
+    if (filters.status && filters.status.length > 0) {
+      query = query.in("status", filters.status);
+    }
+
+    if (filters.age_group) {
+      query = query.eq("age_group", filters.age_group);
+    }
+
+    if (filters.topic_id) {
+      query = query.eq("topic_id", filters.topic_id);
+    }
+
+    // Apply pagination
+    const from = (pagination.page - 1) * pagination.limit;
+    const to = from + pagination.limit - 1;
+    query = query.range(from, to);
+
+    const { data, error, count } = await query;
+
+    if (error) {
+      // eslint-disable-next-line no-console
+      console.error("Error fetching questions:", error);
+      throw new Error("Failed to fetch questions");
+    }
+
+    return {
+      data: data || [],
+      pagination: {
+        page: pagination.page,
+        limit: pagination.limit,
+        total: count || 0,
+      },
+    };
+  }
+
+  /**
+   * Updates a question's status or content
+   *
+   * @param userId - The ID of the authenticated user
+   * @param questionId - The ID of the question to update
+   * @param data - The update data (status and/or content)
+   * @returns Promise resolving to the updated question
+   * @throws Error if question doesn't exist, doesn't belong to user, or update fails
+   */
+  async updateQuestion(userId: string, questionId: number, data: UpdateQuestionInput): Promise<QuestionDto> {
+    // First verify the question exists and belongs to the user
+    const { data: existingQuestion, error: fetchError } = await this.supabase
+      .from("questions")
+      .select("*")
+      .eq("id", questionId)
+      .eq("user_id", userId)
+      .single();
+
+    if (fetchError || !existingQuestion) {
+      throw new Error("Question not found or doesn't belong to user");
+    }
+
+    // Prepare update data
+    const updateData: { status?: QuestionStatus; content?: string; updated_at?: string } = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (data.status) {
+      updateData.status = data.status;
+    }
+
+    if (data.content) {
+      updateData.content = data.content;
+    }
+
+    // Update the question
+    const { data: updatedQuestion, error: updateError } = await this.supabase
+      .from("questions")
+      .update(updateData)
+      .eq("id", questionId)
+      .eq("user_id", userId)
+      .select("*")
+      .single();
+
+    if (updateError || !updatedQuestion) {
+      // eslint-disable-next-line no-console
+      console.error("Error updating question:", updateError);
+      throw new Error("Failed to update question");
+    }
+
+    return updatedQuestion;
+  }
+
+  /**
    * Calls external AI service (Openrouter.ai) to generate question content
    *
    * @param data - Question generation parameters
@@ -132,7 +240,6 @@ export class QuestionsService {
     try {
       // Call OpenRouter service
       const response = await this.openRouterService.sendChat(messages, responseFormat);
-
       // Parse and validate response
       if (!response || typeof response !== "object" || !("questions" in response)) {
         throw new Error("Invalid response format from AI service");

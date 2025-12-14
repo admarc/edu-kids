@@ -78,6 +78,12 @@ export function Navigation({ user }: NavigationProps) {
               <a href="/generate" className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors">
                 Generuj pytania
               </a>
+              <a
+                href="/questions"
+                className="text-sm font-medium text-gray-700 hover:text-indigo-600 transition-colors"
+              >
+                Przeglądaj pytania
+              </a>
             </div>
           </div>
 

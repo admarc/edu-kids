@@ -30,7 +30,35 @@ export const generateQuestionsSchema = z.object({
 });
 
 /**
+ * Schema for validating UpdateQuestionCommand
+ * Used in PATCH /api/questions/[id]
+ */
+export const updateQuestionSchema = z
+  .object({
+    status: z
+      .enum(["pending", "accepted", "rejected"], {
+        message: "Status musi być jednym z: pending, accepted, rejected",
+      })
+      .optional(),
+    content: z
+      .string()
+      .min(ValidationRules.question.contentMinLength, { message: "Treść pytania nie może być pusta" })
+      .max(ValidationRules.question.maxContentLength, {
+        message: `Treść pytania może mieć maksymalnie ${ValidationRules.question.maxContentLength} znaków`,
+      })
+      .optional(),
+  })
+  .refine((data) => data.status !== undefined || data.content !== undefined, {
+    message: "Przynajmniej jedno pole (status lub content) musi zostać podane",
+  });
+
+/**
  * Inferred type from generateQuestionsSchema
  * Should match GenerateQuestionsCommand from types.ts
  */
 export type GenerateQuestionsInput = z.infer<typeof generateQuestionsSchema>;
+
+/**
+ * Inferred type from updateQuestionSchema
+ */
+export type UpdateQuestionInput = z.infer<typeof updateQuestionSchema>;
