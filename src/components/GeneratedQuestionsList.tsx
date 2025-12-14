@@ -11,7 +11,7 @@ import type { GeneratedQuestionDto } from "../types";
 interface GeneratedQuestionsListProps {
   questions: GeneratedQuestionDto[];
   onAccept: (questionId: number) => Promise<void>;
-  onReject: (questionId: number) => void;
+  onReject: (questionId: number) => Promise<void>;
   onEdit: (questionId: number, newContent: string) => Promise<void>;
 }
 

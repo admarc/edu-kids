@@ -13,7 +13,6 @@
 import type { APIRoute } from "astro";
 import { QuestionsService } from "../../../lib/services/questions.service";
 import { generateQuestionsSchema } from "../../../lib/validators/questions.validators";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import { z } from "zod";
 
 export const prerender = false;
@@ -36,13 +35,25 @@ export const POST: APIRoute = async ({ request, locals }) => {
         }
       );
     }
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: "Unauthorized",
+          message: "Authentication required",
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
     // Step 2: Validate request data using Zod schema
     const validatedData = generateQuestionsSchema.parse(body);
 
     // Step 3: Create service instance and generate questions
     const questionsService = new QuestionsService(locals.supabase);
-    const questions = await questionsService.generateQuestions(DEFAULT_USER_ID, validatedData);
+    const questions = await questionsService.generateQuestions(locals.user.id, validatedData);
 
     // Step 4: Return success response with 201 Created
     return new Response(JSON.stringify(questions), {

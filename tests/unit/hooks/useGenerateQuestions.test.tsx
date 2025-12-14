@@ -559,8 +559,14 @@ describe("useGenerateQuestions Hook", () => {
 
       expect(result.current.generatedQuestions).toHaveLength(2);
 
-      act(() => {
-        result.current.handleAccept(1);
+      // Mock PATCH API call for accepting question
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({}),
+      });
+
+      await act(async () => {
+        await result.current.handleAccept(1);
       });
 
       expect(result.current.generatedQuestions).toHaveLength(1);
@@ -600,8 +606,14 @@ describe("useGenerateQuestions Hook", () => {
 
       expect(result.current.generatedQuestions).toHaveLength(2);
 
-      act(() => {
-        result.current.handleReject(1);
+      // Mock PATCH API call for rejecting question
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({}),
+      });
+
+      await act(async () => {
+        await result.current.handleReject(1);
       });
 
       expect(result.current.generatedQuestions).toHaveLength(1);
@@ -639,6 +651,12 @@ describe("useGenerateQuestions Hook", () => {
       });
 
       const newContent = "Updated question content";
+
+      // Mock PATCH API call for editing question
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({}),
+      });
 
       await act(async () => {
         await result.current.handleEdit(1, newContent);
@@ -717,6 +735,12 @@ describe("useGenerateQuestions Hook", () => {
       });
 
       const contentWithWhitespace = "  Trimmed content  ";
+
+      // Mock PATCH API call for editing question
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({}),
+      });
 
       await act(async () => {
         await result.current.handleEdit(1, contentWithWhitespace);

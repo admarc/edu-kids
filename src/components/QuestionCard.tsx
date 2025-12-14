@@ -10,13 +10,13 @@ import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Button } from "./ui/button";
 import { Check, X, Pencil, Save, Undo2, LoaderCircle } from "lucide-react";
 import { Label } from "./ui/label";
-import type { GeneratedQuestionDto } from "../types";
+import type { GeneratedQuestionDto, QuestionDto } from "../types";
 
 interface QuestionCardProps {
-  question: GeneratedQuestionDto;
+  question: GeneratedQuestionDto | QuestionDto;
   index: number;
   onAccept: (questionId: number) => Promise<void>;
-  onReject: (questionId: number) => void;
+  onReject: (questionId: number) => Promise<void>;
   onEdit: (questionId: number, newContent: string) => Promise<void>;
 }
 
@@ -24,6 +24,7 @@ export function QuestionCard({ question, index, onAccept, onReject, onEdit }: Qu
   const [mode, setMode] = useState<"view" | "edit">("view");
   const [editedContent, setEditedContent] = useState(question.content);
   const [isAccepting, setIsAccepting] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -50,8 +51,15 @@ export function QuestionCard({ question, index, onAccept, onReject, onEdit }: Qu
   };
 
   // Handle reject action
-  const handleReject = () => {
-    onReject(question.id);
+  const handleReject = async () => {
+    setIsRejecting(true);
+    try {
+      await onReject(question.id);
+    } catch {
+      // Error is already handled in the hook with toast
+    } finally {
+      setIsRejecting(false);
+    }
   };
 
   // Handle edit mode toggle
@@ -103,7 +111,7 @@ export function QuestionCard({ question, index, onAccept, onReject, onEdit }: Qu
     }
   };
 
-  const isProcessing = isAccepting || isEditing;
+  const isProcessing = isAccepting || isRejecting || isEditing;
 
   return (
     <Card
@@ -154,26 +162,28 @@ export function QuestionCard({ question, index, onAccept, onReject, onEdit }: Qu
       <CardFooter className="flex gap-2">
         {mode === "view" ? (
           <>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handleAccept}
-              disabled={isProcessing}
-              className="flex-1 sm:flex-none"
-              aria-label={`Zatwierdź pytanie ${index + 1}`}
-            >
-              {isAccepting ? (
-                <>
-                  <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
-                  Zatwierdzanie...
-                </>
-              ) : (
-                <>
-                  <Check className="mr-2 h-4 w-4" aria-hidden="true" />
-                  Zatwierdź
-                </>
-              )}
-            </Button>
+            {question.status === "pending" && (
+              <Button
+                variant="default"
+                size="sm"
+                onClick={handleAccept}
+                disabled={isProcessing}
+                className="flex-1 sm:flex-none"
+                aria-label={`Zatwierdź pytanie ${index + 1}`}
+              >
+                {isAccepting ? (
+                  <>
+                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                    Zatwierdzanie...
+                  </>
+                ) : (
+                  <>
+                    <Check className="mr-2 h-4 w-4" aria-hidden="true" />
+                    Zatwierdź
+                  </>
+                )}
+              </Button>
+            )}
             <Button
               variant="outline"
               size="sm"
@@ -185,17 +195,28 @@ export function QuestionCard({ question, index, onAccept, onReject, onEdit }: Qu
               <Pencil className="mr-2 h-4 w-4" aria-hidden="true" />
               Edytuj
             </Button>
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={handleReject}
-              disabled={isProcessing}
-              className="flex-1 sm:flex-none"
-              aria-label={`Odrzuć pytanie ${index + 1}`}
-            >
-              <X className="mr-2 h-4 w-4" aria-hidden="true" />
-              Odrzuć
-            </Button>
+            {question.status === "pending" && (
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleReject}
+                disabled={isProcessing}
+                className="flex-1 sm:flex-none"
+                aria-label={`Odrzuć pytanie ${index + 1}`}
+              >
+                {isRejecting ? (
+                  <>
+                    <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                    Odrzucanie...
+                  </>
+                ) : (
+                  <>
+                    <X className="mr-2 h-4 w-4" aria-hidden="true" />
+                    Odrzuć
+                  </>
+                )}
+              </Button>
+            )}
           </>
         ) : (
           <>

@@ -34,7 +34,7 @@ export interface UseGenerateQuestionsReturn {
 
   // Question actions
   handleAccept: (questionId: number) => Promise<void>;
-  handleReject: (questionId: number) => void;
+  handleReject: (questionId: number) => Promise<void>;
   handleEdit: (questionId: number, newContent: string) => Promise<void>;
 
   // Error handling
@@ -253,27 +253,63 @@ export function useGenerateQuestions(): UseGenerateQuestionsReturn {
    */
   const handleAccept = async (questionId: number) => {
     try {
-      // TODO: Implement when PATCH /api/questions/:id endpoint is ready
-      // For now, just remove from list and show success toast
+      // Update question status to accepted via API
+      const response = await fetch(`/api/questions/${questionId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "accepted" }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("Pytanie nie zostało znalezione");
+        }
+        throw new Error("Nie udało się zaakceptować pytania");
+      }
+
+      // Remove from generated questions list and show success toast
       setState((prev) => ({
         ...prev,
         generatedQuestions: prev.generatedQuestions.filter((q) => q.id !== questionId),
       }));
 
       toast.success("Pytanie zaakceptowane");
-    } catch {
-      toast.error("Nie udało się zaakceptować pytania");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Nie udało się zaakceptować pytania";
+      toast.error(message);
+      throw error; // Re-throw to let QuestionCard handle the error state
     }
   };
 
   /**
-   * Rejects a generated question (removes from local list)
+   * Rejects a generated question (sets status to rejected and removes from local list)
    */
-  const handleReject = (questionId: number) => {
-    setState((prev) => ({
-      ...prev,
-      generatedQuestions: prev.generatedQuestions.filter((q) => q.id !== questionId),
-    }));
+  const handleReject = async (questionId: number) => {
+    try {
+      // Update question status to rejected via API
+      const response = await fetch(`/api/questions/${questionId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "rejected" }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("Pytanie nie zostało znalezione");
+        }
+        throw new Error("Nie udało się odrzucić pytania");
+      }
+
+      // Remove from generated questions list
+      setState((prev) => ({
+        ...prev,
+        generatedQuestions: prev.generatedQuestions.filter((q) => q.id !== questionId),
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Nie udało się odrzucić pytania";
+      toast.error(message);
+      throw error; // Re-throw to let QuestionCard handle the error state
+    }
   };
 
   /**
@@ -287,8 +323,21 @@ export function useGenerateQuestions(): UseGenerateQuestionsReturn {
     }
 
     try {
-      // TODO: Implement when PATCH /api/questions/:id endpoint is ready
-      // For now, just update locally
+      // Update question content via API
+      const response = await fetch(`/api/questions/${questionId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: newContent.trim() }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("Pytanie nie zostało znalezione");
+        }
+        throw new Error("Nie udało się zaktualizować pytania");
+      }
+
+      // Update local state with the new content
       setState((prev) => ({
         ...prev,
         generatedQuestions: prev.generatedQuestions.map((q) =>
@@ -297,8 +346,10 @@ export function useGenerateQuestions(): UseGenerateQuestionsReturn {
       }));
 
       toast.success("Pytanie zaktualizowane");
-    } catch {
-      toast.error("Nie udało się zaktualizować pytania");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Nie udało się zaktualizować pytania";
+      toast.error(message);
+      throw error; // Re-throw to let QuestionCard handle the error state
     }
   };
 

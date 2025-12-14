@@ -1,0 +1,17 @@
+---
+/**
+ * Questions Browse Page
+ *
+ * Allows users to browse and manage their generated questions
+ */
+import Layout from "../layouts/Layout.astro";
+import { BrowseQuestionsView } from "../components/BrowseQuestionsView";
+
+export const prerender = false;
+---
+
+<Layout title="Przeglądaj pytania | EduKids">
+  <div class="container mx-auto py-8 px-4">
+    <BrowseQuestionsView client:load />
+  </div>
+</Layout>

@@ -236,6 +236,7 @@ export const ValidationRules = {
   },
   question: {
     contentMinLength: 1,
+    maxContentLength: 2000,
   },
   generation: {
     maxCount: 10,
